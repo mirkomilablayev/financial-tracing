@@ -10,7 +10,7 @@ import com.finanacialtracing.financialtracingapp.dto.auth.RegisterDTO;
 import com.finanacialtracing.financialtracingapp.entity.User;
 import com.finanacialtracing.financialtracingapp.repository.RoleRepository;
 import com.finanacialtracing.financialtracingapp.repository.UserRepository;
-import com.finanacialtracing.financialtracingapp.util.constants.Constants;
+import com.finanacialtracing.financialtracingapp.util.constants.AuthorizationConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -66,7 +66,7 @@ public class AuthController {
         user.setPassword(encoder.encode(registerDto.getPassword()));
         user.setUsername(registerDto.getUsername());
         user.setFullName(registerDto.getFullName());
-        user.setRoles(Set.of(roleRepository.findByName(Constants.USER_ROLE)
+        user.setRoles(Set.of(roleRepository.findByName(AuthorizationConstants.USER_ROLE)
                 .orElseThrow(() -> new GenericException(Errors.USER_ROLE_NOT_FOUND))));
         User save = userRepository.save(user);
 

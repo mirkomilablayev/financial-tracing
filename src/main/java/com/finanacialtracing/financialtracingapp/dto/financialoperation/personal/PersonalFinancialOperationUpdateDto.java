@@ -1,4 +1,4 @@
-package com.finanacialtracing.financialtracingapp.dto.financialoperation;
+package com.finanacialtracing.financialtracingapp.dto.financialoperation.personal;
 
 import lombok.*;
 

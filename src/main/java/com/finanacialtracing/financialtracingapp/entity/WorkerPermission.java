@@ -16,6 +16,10 @@ public class WorkerPermission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long name;
+    private String name;
     private Boolean isDeleted = false;
+
+    public WorkerPermission(String name) {
+        this.name = name;
+    }
 }

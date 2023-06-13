@@ -6,8 +6,10 @@ import com.finanacialtracing.financialtracingapp.entity.User;
 import com.finanacialtracing.financialtracingapp.entity.Worker;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface WorkerRepository extends JpaRepository<Worker, Long> {
-    Optional<Worker> findByUserAndOrganizationAndIsDeleted(User user, Organization organization, Boolean isDeleted);
+    List<Worker> findAllByUserIdAndIsDeleted(Long userId, Boolean isDeleted);
+    List<Worker> findAllByOrgIdAndIsDeleted(Long orgId, Boolean isDeleted);
 }

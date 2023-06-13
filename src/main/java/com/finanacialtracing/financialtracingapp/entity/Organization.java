@@ -14,8 +14,7 @@ public class Organization {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String orgName;
-    @ManyToOne
-    private User creator;
+    private Long userId;
 
     private Boolean isDeleted = false;
 }

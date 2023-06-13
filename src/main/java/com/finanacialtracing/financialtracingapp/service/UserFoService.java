@@ -1,9 +1,9 @@
 package com.finanacialtracing.financialtracingapp.service;
 
 import com.finanacialtracing.financialtracingapp.dto.CommonResult;
-import com.finanacialtracing.financialtracingapp.dto.financialoperation.GetPersonalFinancialOperationDTO;
-import com.finanacialtracing.financialtracingapp.dto.financialoperation.PersonalFinancialOperationCreateDto;
-import com.finanacialtracing.financialtracingapp.dto.financialoperation.PersonalFinancialOperationUpdateDto;
+import com.finanacialtracing.financialtracingapp.dto.financialoperation.personal.GetPersonalFinancialOperationDTO;
+import com.finanacialtracing.financialtracingapp.dto.financialoperation.personal.PersonalFinancialOperationCreateDto;
+import com.finanacialtracing.financialtracingapp.dto.financialoperation.personal.PersonalFinancialOperationUpdateDto;
 import com.finanacialtracing.financialtracingapp.dto.foType.PersonalFOCreateTypeDTO;
 import com.finanacialtracing.financialtracingapp.dto.foType.PersonalFOUpdateTypeDTO;
 import com.finanacialtracing.financialtracingapp.exception.GenericException;

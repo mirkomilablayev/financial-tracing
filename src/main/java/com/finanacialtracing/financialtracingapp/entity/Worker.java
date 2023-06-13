@@ -16,12 +16,9 @@ public class Worker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private User user;
-    @ManyToOne
-    private Organization organization;
-    @ManyToOne
-    private WorkerPosition position;
+    private Long userId;
+    private Long orgId;
+    private Long positionId;
     @ManyToMany
     private Set<WorkerPermission> permissions;
     private Boolean isDeleted = false;

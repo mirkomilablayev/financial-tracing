@@ -2,10 +2,10 @@ package com.finanacialtracing.financialtracingapp.service.impl;
 
 
 import com.finanacialtracing.financialtracingapp.dto.CommonResult;
-import com.finanacialtracing.financialtracingapp.dto.financialoperation.FinancialOperationResponse;
-import com.finanacialtracing.financialtracingapp.dto.financialoperation.GetPersonalFinancialOperationDTO;
-import com.finanacialtracing.financialtracingapp.dto.financialoperation.PersonalFinancialOperationCreateDto;
-import com.finanacialtracing.financialtracingapp.dto.financialoperation.PersonalFinancialOperationUpdateDto;
+import com.finanacialtracing.financialtracingapp.dto.financialoperation.personal.FinancialOperationResponse;
+import com.finanacialtracing.financialtracingapp.dto.financialoperation.personal.GetPersonalFinancialOperationDTO;
+import com.finanacialtracing.financialtracingapp.dto.financialoperation.personal.PersonalFinancialOperationCreateDto;
+import com.finanacialtracing.financialtracingapp.dto.financialoperation.personal.PersonalFinancialOperationUpdateDto;
 import com.finanacialtracing.financialtracingapp.dto.foType.PersonalFOCreateTypeDTO;
 import com.finanacialtracing.financialtracingapp.dto.foType.PersonalFOUpdateTypeDTO;
 import com.finanacialtracing.financialtracingapp.entity.FOType;
@@ -24,8 +24,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
 @Service
 @AllArgsConstructor

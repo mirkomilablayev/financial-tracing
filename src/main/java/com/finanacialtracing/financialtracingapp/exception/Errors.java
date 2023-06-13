@@ -15,7 +15,11 @@ public enum Errors {
     CANNOT_UPDATE_FO_TYPE(8, "Cannot update fo type"),
     CANNOT_DELETE_FO_TYPE(9, "Cannot delete Financial Operation Type"),
     FORBIDDEN(10, "Forbidden"),
-    CANNOT_DISABLE_FO(11, "Cannot delete Financial Operation");
+    CANNOT_DISABLE_FO(11, "Cannot delete Financial Operation"),
+    CANNOT_CREATE_ORGANIZATION_POSITION(12, "Cannot create organization position"),
+    CANNOT_DELETE_ORGANIZATION_POSITION(13, "Cannot delete organization worker position"),
+    CANNOT_GET_WORKER_POSITIONS(14, "Cannot get worker position"),
+    CANNOT_UPDATE_ORGANIZATION(15, "Cannot update organization"), CANNOT_DELETE_ORGANIZATION(16, "Cannot delete organization");
     private final Integer code;
     private final String message;
 
