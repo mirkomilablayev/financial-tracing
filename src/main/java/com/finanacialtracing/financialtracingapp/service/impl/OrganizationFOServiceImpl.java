@@ -4,26 +4,20 @@ import com.finanacialtracing.financialtracingapp.dto.CommonResult;
 import com.finanacialtracing.financialtracingapp.dto.organization.OrganizationCreateDto;
 import com.finanacialtracing.financialtracingapp.dto.organization.OrganizationDto;
 import com.finanacialtracing.financialtracingapp.dto.organization.OrganizationUpdateDto;
+import com.finanacialtracing.financialtracingapp.dto.worker.WorkerCreateDto;
 import com.finanacialtracing.financialtracingapp.dto.workerposition.WorkerPositionCreateDto;
 import com.finanacialtracing.financialtracingapp.dto.workerposition.WorkerPositionDto;
 import com.finanacialtracing.financialtracingapp.dto.workerposition.WorkerPositionUpdateDto;
-import com.finanacialtracing.financialtracingapp.entity.Organization;
-import com.finanacialtracing.financialtracingapp.entity.User;
-import com.finanacialtracing.financialtracingapp.entity.Worker;
-import com.finanacialtracing.financialtracingapp.entity.WorkerPosition;
+import com.finanacialtracing.financialtracingapp.entity.*;
 import com.finanacialtracing.financialtracingapp.exception.Errors;
 import com.finanacialtracing.financialtracingapp.exception.GenericException;
-import com.finanacialtracing.financialtracingapp.repository.OrganizationRepository;
-import com.finanacialtracing.financialtracingapp.repository.WorkerPositionRepository;
-import com.finanacialtracing.financialtracingapp.repository.WorkerRepository;
+import com.finanacialtracing.financialtracingapp.repository.*;
 import com.finanacialtracing.financialtracingapp.service.OrganizationFOService;
 import com.finanacialtracing.financialtracingapp.util.securityutils.SecurityUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -32,6 +26,8 @@ public class OrganizationFOServiceImpl implements OrganizationFOService {
     private final OrganizationRepository organizationRepository;
     private final WorkerPositionRepository workerPositionRepository;
     private final WorkerRepository workerRepository;
+    private final UserRepository userRepository;
+    private final WorkerPermissionRepository workerPermissionRepository;
 
     @Override
     public CommonResult createOrganization(OrganizationCreateDto organizationCreateDto) {
@@ -153,12 +149,40 @@ public class OrganizationFOServiceImpl implements OrganizationFOService {
     }
 
     @Override
-    public CommonResult addWorker() {
-        return null;
+    public CommonResult addWorker(WorkerCreateDto workerCreateDto) {
+        User currentUser = SecurityUtils.getCurrentUser();
+        Worker worker = new Worker();
+        if (userRepository.existsByIdAndIsDeleted(workerCreateDto.getUserId(), Boolean.FALSE)) {
+            throw new GenericException(Errors.NOT_FOUND);
+        }
+        if (organizationRepository.existsByIdAndIsDeleted(workerCreateDto.getOrgId(), Boolean.FALSE)) {
+            throw new GenericException(Errors.NOT_FOUND);
+        }
+        if (workerRepository.existsByIdAndIsDeleted(workerCreateDto.getPositionId(), Boolean.FALSE)) {
+            throw new GenericException(Errors.NOT_FOUND);
+        }
+        if (workerRepository.existsByUserIdAndOrgId(workerCreateDto.getUserId(), workerCreateDto.getOrgId())) {
+            throw new GenericException(Errors.USER_ALREADY_ADDED_AS_WORKER);
+        }
+
+        worker.setUserId(workerCreateDto.getUserId());
+        worker.setOrgId(workerCreateDto.getOrgId());
+        worker.setPositionId(workerCreateDto.getPositionId());
+        worker.setAddedBy(currentUser.getId());
+
+        Set<WorkerPermission> workerPermissionSet = new HashSet<>();
+        for (Long permissionId : workerCreateDto.getPermissionIds()) {
+            WorkerPermission workerPermission = workerPermissionRepository.findByIdAndIsDeleted(permissionId, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+            workerPermissionSet.add(workerPermission);
+        }
+
+        worker.setPermissions(workerPermissionSet);
+        Worker savedWorker = workerRepository.save(worker);
+        return new CommonResult(savedWorker.getId() + " is successfully deleted");
     }
 
     @Override
-    public CommonResult deleteWorker() {
+    public CommonResult deleteWorker(Long workerId) {
         return null;
     }
 

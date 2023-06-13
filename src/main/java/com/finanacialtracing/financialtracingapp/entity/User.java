@@ -22,6 +22,7 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String fullName;
+    private Boolean isDeleted = false;
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<UserRole> roles;
 
@@ -36,6 +37,7 @@ public class User implements UserDetails {
                 user.getUsername(),
                 user.getPassword(),
                 user.fullName,
+                user.isDeleted,
                 authorities);
     }
 

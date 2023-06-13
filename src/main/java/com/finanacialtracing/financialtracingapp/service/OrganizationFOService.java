@@ -3,6 +3,7 @@ package com.finanacialtracing.financialtracingapp.service;
 import com.finanacialtracing.financialtracingapp.dto.CommonResult;
 import com.finanacialtracing.financialtracingapp.dto.organization.OrganizationCreateDto;
 import com.finanacialtracing.financialtracingapp.dto.organization.OrganizationUpdateDto;
+import com.finanacialtracing.financialtracingapp.dto.worker.WorkerCreateDto;
 import com.finanacialtracing.financialtracingapp.dto.workerposition.WorkerPositionCreateDto;
 import com.finanacialtracing.financialtracingapp.dto.workerposition.WorkerPositionUpdateDto;
 
@@ -16,8 +17,8 @@ public interface OrganizationFOService {
     CommonResult editWorkerPosition(WorkerPositionUpdateDto workerPositionUpdateDto);
     CommonResult deleteWorkerPosition(Long workerPositionId);
     CommonResult getWorkerPositionList(Long orgId);
-    CommonResult addWorker();
-    CommonResult deleteWorker();
+    CommonResult addWorker(WorkerCreateDto workerCreateDto);
+    CommonResult deleteWorker(Long workerId);
     CommonResult editWorkerPositionAndPermission();
     CommonResult getWorkers();
     CommonResult createOrgFOType();

@@ -19,6 +19,7 @@ public class Worker {
     private Long userId;
     private Long orgId;
     private Long positionId;
+    private Long addedBy;
     @ManyToMany
     private Set<WorkerPermission> permissions;
     private Boolean isDeleted = false;

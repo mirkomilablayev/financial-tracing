@@ -19,7 +19,9 @@ public enum Errors {
     CANNOT_CREATE_ORGANIZATION_POSITION(12, "Cannot create organization position"),
     CANNOT_DELETE_ORGANIZATION_POSITION(13, "Cannot delete organization worker position"),
     CANNOT_GET_WORKER_POSITIONS(14, "Cannot get worker position"),
-    CANNOT_UPDATE_ORGANIZATION(15, "Cannot update organization"), CANNOT_DELETE_ORGANIZATION(16, "Cannot delete organization");
+    CANNOT_UPDATE_ORGANIZATION(15, "Cannot update organization"),
+    CANNOT_DELETE_ORGANIZATION(16, "Cannot delete organization"),
+    USER_ALREADY_ADDED_AS_WORKER(17,"This user is already added as worker" );
     private final Integer code;
     private final String message;
 

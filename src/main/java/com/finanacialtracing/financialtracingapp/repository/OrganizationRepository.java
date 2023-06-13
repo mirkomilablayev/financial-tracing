@@ -41,4 +41,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
             " \n" +
             " COMMIT;", nativeQuery = true)
     int deleteOrganization(@Param("orgId") Long orgId);
+
+    Boolean existsByIdAndIsDeleted(Long id, Boolean isDeleted);
 }
