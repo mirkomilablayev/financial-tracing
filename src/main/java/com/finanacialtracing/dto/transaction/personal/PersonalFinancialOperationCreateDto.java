@@ -1,4 +1,4 @@
-package com.finanacialtracing.dto.financialoperation.organization;
+package com.finanacialtracing.dto.transaction.personal;
 
 import lombok.*;
 
@@ -6,8 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class FinancialOperationCreateDto {
-    private Long orgId;
+public class PersonalFinancialOperationCreateDto {
     @NonNull
     private Double amount;
     private String description;

@@ -1,9 +1,9 @@
 package com.finanacialtracing.controller;
 
 import com.finanacialtracing.dto.CommonResult;
-import com.finanacialtracing.dto.financialoperation.personal.PersonalFinancialOperationCriteria;
-import com.finanacialtracing.dto.financialoperation.personal.PersonalFinancialOperationCreateDto;
-import com.finanacialtracing.dto.financialoperation.FinancialOperationUpdateDto;
+import com.finanacialtracing.dto.transaction.personal.PersonalFinancialOperationCriteria;
+import com.finanacialtracing.dto.transaction.personal.PersonalFinancialOperationCreateDto;
+import com.finanacialtracing.dto.transaction.FinancialOperationUpdateDto;
 import com.finanacialtracing.dto.foType.PersonalFOCreateTypeDTO;
 import com.finanacialtracing.dto.foType.PersonalFOUpdateTypeDTO;
 import com.finanacialtracing.service.UserFinancialOperationService;

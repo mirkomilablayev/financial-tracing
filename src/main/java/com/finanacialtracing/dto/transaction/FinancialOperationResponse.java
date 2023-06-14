@@ -1,6 +1,6 @@
-package com.finanacialtracing.dto.financialoperation;
+package com.finanacialtracing.dto.transaction;
 
-import com.finanacialtracing.entity.FinancialOperation;
+import com.finanacialtracing.entity.Transaction;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class FinancialOperationResponse {
-    private List<FinancialOperation> income;
-    private List<FinancialOperation> outcome;
+    private List<Transaction> income;
+    private List<Transaction> outcome;
 }

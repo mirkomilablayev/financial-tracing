@@ -1,8 +1,8 @@
 package com.finanacialtracing.service.impl;
 
 import com.finanacialtracing.dto.CommonResult;
-import com.finanacialtracing.dto.financialoperation.FinancialOperationResponse;
-import com.finanacialtracing.dto.financialoperation.organization.OrganizationFinancialOperationCriteria;
+import com.finanacialtracing.dto.transaction.FinancialOperationResponse;
+import com.finanacialtracing.dto.transaction.organization.OrganizationFinancialOperationCriteria;
 import com.finanacialtracing.dto.organization.OrganizationCreateDto;
 import com.finanacialtracing.dto.organization.OrganizationUpdateDto;
 import com.finanacialtracing.dto.worker.UpdateWorkerDto;
@@ -14,9 +14,8 @@ import com.finanacialtracing.dto.workerposition.WorkerPositionUpdateDto;
 import com.finanacialtracing.entity.*;
 import com.finanacialtracing.exception.Errors;
 import com.finanacialtracing.exception.GenericException;
-import com.finanacialtracing.dto.financialoperation.personal.PersonalFinancialOperationCriteria;
-import com.finanacialtracing.dto.financialoperation.organization.FinancialOperationCreateDto;
-import com.finanacialtracing.dto.financialoperation.FinancialOperationUpdateDto;
+import com.finanacialtracing.dto.transaction.organization.TranCreateDto;
+import com.finanacialtracing.dto.transaction.FinancialOperationUpdateDto;
 import com.finanacialtracing.dto.foType.FOTypeDto;
 import com.finanacialtracing.dto.foType.OrganizationFOTypeCreateDto;
 import com.finanacialtracing.dto.foType.OrganizationFOTypeUpdateDto;
@@ -268,36 +267,36 @@ public class OrganizationFinancialOperationServiceImpl implements OrganizationFi
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_CREATE_FO_TYPE);
         }
-        FOType foType = new FOType();
-        foType.setOrgId(organizationFOTypeCreateDto.getOrgId());
-        foType.setIsPersonal(Boolean.FALSE);
-        foType.setIsDeleted(Boolean.FALSE);
-        foType.setUserId(currentUser.getId());
-        foType.setName(organizationFOTypeCreateDto.getName());
-        FOType savedFoType = foTypeRepository.save(foType);
-        return new CommonResult(savedFoType.getName() + " is successfully created");
+        TransactionType transactionType = new TransactionType();
+        transactionType.setOrgId(organizationFOTypeCreateDto.getOrgId());
+        transactionType.setIsPersonal(Boolean.FALSE);
+        transactionType.setIsDeleted(Boolean.FALSE);
+        transactionType.setUserId(currentUser.getId());
+        transactionType.setName(organizationFOTypeCreateDto.getName());
+        TransactionType savedTransactionType = foTypeRepository.save(transactionType);
+        return new CommonResult(savedTransactionType.getName() + " is successfully created");
     }
 
     @Override
     public CommonResult editOrgFOType(OrganizationFOTypeUpdateDto organizationFOTypeUpdateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        FOType foType = foTypeRepository.findByIdAndIsDeletedAndIsPersonal(organizationFOTypeUpdateDto.getFoTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(foType.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        TransactionType transactionType = foTypeRepository.findByIdAndIsDeletedAndIsPersonal(organizationFOTypeUpdateDto.getFoTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(transactionType.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_UPDATE_FO_TYPE);
         }
-        if (!Objects.equals(foType.getName(), organizationFOTypeUpdateDto.getNewName())) {
-            foType.setName(organizationFOTypeUpdateDto.getNewName());
+        if (!Objects.equals(transactionType.getName(), organizationFOTypeUpdateDto.getNewName())) {
+            transactionType.setName(organizationFOTypeUpdateDto.getNewName());
         }
-        FOType savedFoType = foTypeRepository.save(foType);
-        return new CommonResult("Financial operation type is updated to " + savedFoType.getName());
+        TransactionType savedTransactionType = foTypeRepository.save(transactionType);
+        return new CommonResult("Financial operation type is updated to " + savedTransactionType.getName());
     }
 
     @Override
     public CommonResult deleteOrgFOType(Long foTypeId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        FOType foType = foTypeRepository.findByIdAndIsDeletedAndIsPersonal(foTypeId, Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(foType.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        TransactionType transactionType = foTypeRepository.findByIdAndIsDeletedAndIsPersonal(foTypeId, Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(transactionType.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_DELETE_FO_TYPE);
         }
@@ -305,9 +304,9 @@ public class OrganizationFinancialOperationServiceImpl implements OrganizationFi
             throw new GenericException(Errors.CANNOT_DELETE_FO_TYPE);
         }
 
-        foType.setIsDeleted(Boolean.TRUE);
-        FOType deletedFOType = foTypeRepository.save(foType);
-        return new CommonResult(deletedFOType.getName() + " is successfully deleted!");
+        transactionType.setIsDeleted(Boolean.TRUE);
+        TransactionType deletedTransactionType = foTypeRepository.save(transactionType);
+        return new CommonResult(deletedTransactionType.getName() + " is successfully deleted!");
     }
 
     @Override
@@ -318,31 +317,31 @@ public class OrganizationFinancialOperationServiceImpl implements OrganizationFi
             throw new GenericException(Errors.CANNOT_GET_FO_TYPE_LIST);
         }
         List<FOTypeDto> foTypeDtoList = foTypeRepository.findAllByOrgIdAndIsDeletedAndIsPersonal(organization.getId(), Boolean.FALSE, Boolean.FALSE)
-                .stream().map(foType -> new FOTypeDto(
-                        foType.getId(),
-                        foType.getName()
+                .stream().map(transactionType -> new FOTypeDto(
+                        transactionType.getId(),
+                        transactionType.getName()
                 )).toList();
         return new CommonResult(foTypeDtoList);
     }
 
     @Override
-    public CommonResult createOrgFO(FinancialOperationCreateDto financialOperationCreateDto) {
+    public CommonResult createOrgFO(TranCreateDto tranCreateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Organization organization = organizationRepository.findByIdAndIsDeleted(financialOperationCreateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        FOType foType = foTypeRepository.findByIdAndIsDeletedAndIsPersonal(financialOperationCreateDto.getFoTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(tranCreateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        TransactionType transactionType = foTypeRepository.findByIdAndIsDeletedAndIsPersonal(tranCreateDto.getFoTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
 
         checkWorkerPermission(currentUser, organization, WorkerPermissionConstants.can_add_fo);
 
-        FinancialOperation financialOperation = new FinancialOperation();
-        financialOperation.setTypeId(foType.getId());
-        financialOperation.setIsDeleted(Boolean.FALSE);
-        financialOperation.setIsPersonal(Boolean.FALSE);
-        financialOperation.setCreatedAt(LocalDateTime.now());
-        financialOperation.setAmount(financialOperationCreateDto.getAmount());
-        financialOperation.setOrgId(organization.getId());
-        financialOperation.setIsIncome(financialOperationCreateDto.getIsIncome());
-        financialOperation.setDescription(financialOperationCreateDto.getDescription());
-        FinancialOperation savedFO = financialOperationRepository.save(financialOperation);
+        Transaction transaction = new Transaction();
+        transaction.setTypeId(transactionType.getId());
+        transaction.setIsDeleted(Boolean.FALSE);
+        transaction.setIsPersonal(Boolean.FALSE);
+        transaction.setCreatedAt(LocalDateTime.now());
+        transaction.setAmount(tranCreateDto.getAmount());
+        transaction.setOrgId(organization.getId());
+        transaction.setIsIncome(tranCreateDto.getIsIncome());
+        transaction.setDescription(tranCreateDto.getDescription());
+        Transaction savedFO = financialOperationRepository.save(transaction);
         return new CommonResult(savedFO.getId() + " is successfully saved");
     }
 
@@ -353,44 +352,44 @@ public class OrganizationFinancialOperationServiceImpl implements OrganizationFi
     @Override
     public CommonResult editOrgFO(FinancialOperationUpdateDto financialOperationUpdateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        FinancialOperation financialOperation = financialOperationRepository.findByIdAndIsDeletedAndIsPersonal(financialOperationUpdateDto.getId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(financialOperation.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Transaction transaction = financialOperationRepository.findByIdAndIsDeletedAndIsPersonal(financialOperationUpdateDto.getId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(transaction.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
 
         checkWorkerPermission(currentUser, organization, WorkerPermissionConstants.can_edit_fo);
 
 
-        if (Objects.equals(financialOperation.getAmount(), financialOperationUpdateDto.getAmount())) {
-            financialOperation.setAmount(financialOperationUpdateDto.getAmount());
+        if (Objects.equals(transaction.getAmount(), financialOperationUpdateDto.getAmount())) {
+            transaction.setAmount(financialOperationUpdateDto.getAmount());
         }
-        if (Objects.equals(financialOperation.getDescription(), financialOperationUpdateDto.getDescription())) {
-            financialOperation.setDescription(financialOperationUpdateDto.getDescription());
+        if (Objects.equals(transaction.getDescription(), financialOperationUpdateDto.getDescription())) {
+            transaction.setDescription(financialOperationUpdateDto.getDescription());
         }
-        if (Objects.equals(financialOperation.getTypeId(), financialOperationUpdateDto.getFoTypeId())) {
-            FOType foType = foTypeRepository.findByIdAndIsDeletedAndIsPersonal(financialOperationUpdateDto.getFoTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-            if (!Objects.equals(financialOperation.getOrgId(), foType.getOrgId())) {
+        if (Objects.equals(transaction.getTypeId(), financialOperationUpdateDto.getFoTypeId())) {
+            TransactionType transactionType = foTypeRepository.findByIdAndIsDeletedAndIsPersonal(financialOperationUpdateDto.getFoTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+            if (!Objects.equals(transaction.getOrgId(), transactionType.getOrgId())) {
                 throw new GenericException(Errors.CANNOT_UPDATE_FO_TYPE);
             }
-            financialOperation.setTypeId(financialOperationUpdateDto.getFoTypeId());
+            transaction.setTypeId(financialOperationUpdateDto.getFoTypeId());
         }
-        if (Objects.equals(financialOperation.getIsIncome(), financialOperationUpdateDto.getIsIncome())) {
-            financialOperation.setIsIncome(financialOperationUpdateDto.getIsIncome());
+        if (Objects.equals(transaction.getIsIncome(), financialOperationUpdateDto.getIsIncome())) {
+            transaction.setIsIncome(financialOperationUpdateDto.getIsIncome());
         }
 
 
-        FinancialOperation savedFinancialOperation = financialOperationRepository.save(financialOperation);
-        return new CommonResult(savedFinancialOperation.getId() + " is successfully updated");
+        Transaction savedTransaction = financialOperationRepository.save(transaction);
+        return new CommonResult(savedTransaction.getId() + " is successfully updated");
     }
 
 
     @Override
     public CommonResult deleteOrgFO(Long financialOperationId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        FinancialOperation financialOperation = financialOperationRepository.findByIdAndIsDeletedAndIsPersonal(financialOperationId, Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(financialOperation.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Transaction transaction = financialOperationRepository.findByIdAndIsDeletedAndIsPersonal(financialOperationId, Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(transaction.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
         checkWorkerPermission(currentUser, organization, WorkerPermissionConstants.can_delete_fo);
-        financialOperation.setIsDeleted(Boolean.TRUE);
-        FinancialOperation deletedFinancialOperation = financialOperationRepository.save(financialOperation);
-        return new CommonResult(deletedFinancialOperation.getId() + " is successfully deleted!");
+        transaction.setIsDeleted(Boolean.TRUE);
+        Transaction deletedTransaction = financialOperationRepository.save(transaction);
+        return new CommonResult(deletedTransaction.getId() + " is successfully deleted!");
     }
 
     @Override
@@ -403,7 +402,7 @@ public class OrganizationFinancialOperationServiceImpl implements OrganizationFi
         financialOperationResponse.setIncome(new ArrayList<>());
         financialOperationResponse.setOutcome(new ArrayList<>());
 
-        List<FinancialOperation> financialOperationsList = financialOperationRepository.getOrganizationFinancialOperationsList(
+        List<Transaction> financialOperationsList = financialOperationRepository.getOrganizationFinancialOperationsList(
                 organizationFinancialOperationCriteria.getSortedByAmount(),
                 organizationFinancialOperationCriteria.getMinAmount(),
                 organizationFinancialOperationCriteria.getMaxAmount(),
@@ -413,19 +412,19 @@ public class OrganizationFinancialOperationServiceImpl implements OrganizationFi
                 size,
                 page
         );
-        for (FinancialOperation financialOperation : financialOperationsList) {
+        for (Transaction transaction : financialOperationsList) {
             if (organizationFinancialOperationCriteria.getSortedByDate()) {
                 if (
-                        financialOperation.getCreatedAt().isBefore(organizationFinancialOperationCriteria.getFromDate()) &&
-                                financialOperation.getCreatedAt().isAfter(organizationFinancialOperationCriteria.getToDate())
+                        transaction.getCreatedAt().isBefore(organizationFinancialOperationCriteria.getFromDate()) &&
+                                transaction.getCreatedAt().isAfter(organizationFinancialOperationCriteria.getToDate())
                 ) {
                     continue;
                 }
             }
-            if (financialOperation.getIsIncome()) {
-                financialOperationResponse.getIncome().add(financialOperation);
+            if (transaction.getIsIncome()) {
+                financialOperationResponse.getIncome().add(transaction);
             } else {
-                financialOperationResponse.getOutcome().add(financialOperation);
+                financialOperationResponse.getOutcome().add(transaction);
             }
         }
         return new CommonResult(financialOperationResponse, Errors.SUCCESS.getCode(), Errors.SUCCESS.getMessage());

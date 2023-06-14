@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Entity(name = "fo_types")
-public class FOType {
+public class TransactionType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
