@@ -46,10 +46,10 @@ public class DataLoader implements CommandLineRunner {
             user.setRoles(new HashSet<>(List.of(roleRepository.findByName(AuthorizationConstants.ADMIN_ROLE).orElse(save))));
             userRepository.save(user);
 
-            workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_add_fo));
-            workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_edit_fo));
-            workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_delete_fo));
-            workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_see_fo));
+            workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_add_transaction));
+            workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_edit_transaction));
+            workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_delete_transaction));
+            workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_see_transaction));
 
 
         }

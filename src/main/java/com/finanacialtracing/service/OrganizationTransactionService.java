@@ -1,19 +1,19 @@
 package com.finanacialtracing.service;
 
 import com.finanacialtracing.dto.CommonResult;
-import com.finanacialtracing.dto.transaction.organization.OrganizationFinancialOperationCriteria;
+import com.finanacialtracing.dto.transaction.organization.OrganizationTranCriteria;
 import com.finanacialtracing.dto.worker.UpdateWorkerDto;
 import com.finanacialtracing.dto.worker.WorkerCreateDto;
 import com.finanacialtracing.dto.workerposition.WorkerPositionCreateDto;
 import com.finanacialtracing.dto.workerposition.WorkerPositionUpdateDto;
 import com.finanacialtracing.dto.transaction.organization.TranCreateDto;
-import com.finanacialtracing.dto.transaction.FinancialOperationUpdateDto;
-import com.finanacialtracing.dto.foType.OrganizationFOTypeCreateDto;
-import com.finanacialtracing.dto.foType.OrganizationFOTypeUpdateDto;
+import com.finanacialtracing.dto.transaction.TransactionUpdateDto;
+import com.finanacialtracing.dto.transactiontype.OrganizationTransactionTypeCreateDto;
+import com.finanacialtracing.dto.transactiontype.OrganizationTransactionTypeUpdateDto;
 import com.finanacialtracing.dto.organization.OrganizationCreateDto;
 import com.finanacialtracing.dto.organization.OrganizationUpdateDto;
 
-public interface OrganizationFinancialOperationService {
+public interface OrganizationTransactionService {
     CommonResult createOrganization(OrganizationCreateDto organizationCreateDto);
     CommonResult updateOrganization(OrganizationUpdateDto organizationUpdateDto);
     CommonResult deleteOrganization(Long orgId);
@@ -27,12 +27,12 @@ public interface OrganizationFinancialOperationService {
     CommonResult deleteWorker(Long workerId);
     CommonResult editWorkerPositionAndPermission(UpdateWorkerDto updateWorkerDto);
     CommonResult getWorkers(Long orgId);
-    CommonResult createOrgFOType(OrganizationFOTypeCreateDto organizationFOTypeCreateDto);
-    CommonResult editOrgFOType(OrganizationFOTypeUpdateDto organizationFOTypeUpdateDto);
-    CommonResult deleteOrgFOType(Long foTypeId);
-    CommonResult getOrgFOType(Long orgId);
-    CommonResult createOrgFO(TranCreateDto tranCreateDto);
-    CommonResult editOrgFO(FinancialOperationUpdateDto financialOperationUpdateDto);
-    CommonResult deleteOrgFO(Long foId);
-    CommonResult getOrgFO(int size, int page, OrganizationFinancialOperationCriteria organizationFinancialOperationCriteria);
+    CommonResult createOrganizationTransactionType(OrganizationTransactionTypeCreateDto organizationTransactionTypeCreateDto);
+    CommonResult editOrganizationTransactionType(OrganizationTransactionTypeUpdateDto organizationTransactionTypeUpdateDto);
+    CommonResult deleteOrganizationTransactionType(Long tranTypeId);
+    CommonResult getOrganizationTransactionType(Long orgId);
+    CommonResult createOrganizationTransaction(TranCreateDto tranCreateDto);
+    CommonResult editOrganizationTransaction(TransactionUpdateDto transactionUpdateDto);
+    CommonResult deleteOrganizationTransaction(Long TransactionId);
+    CommonResult getOrganizationTransactionList(int size, int page, OrganizationTranCriteria organizationTranCriteria);
 }

@@ -44,14 +44,14 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         User currentUser = SecurityUtils.getCurrentUser();
 
         if (!Objects.equals(currentUser.getUsername(), changePasswordDto.getUsername())){
-            throw new GenericException(Errors.CANNOT_CHANGE_PASSWORD);
+            throw new GenericException(Errors.CANNOT_CHANGE);
         }
         if (!Objects.equals(changePasswordDto.getOldPassword(), changePasswordDto.getNewPassword())){
-            throw new GenericException(Errors.CANNOT_CHANGE_PASSWORD);
+            throw new GenericException(Errors.CANNOT_CHANGE);
         }
 
         if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), currentUser.getPassword())){
-            throw new GenericException(Errors.CANNOT_CHANGE_PASSWORD);
+            throw new GenericException(Errors.CANNOT_CHANGE);
         }
 
         currentUser.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
@@ -68,7 +68,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 flag = true;
             }
         }
-        if (flag) throw new GenericException(Errors.CANNOT_DELETE_ADMIN);
+        if (flag) throw new GenericException(Errors.CANNOT_CHANGE);
         currentUser.setIsDeleted(Boolean.TRUE);
         User deletedUser = userRepository.save(currentUser);
         return new CommonResult(deletedUser.getUsername() + " s successfully  deleted");
@@ -78,7 +78,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public CommonResult editFullName(String newFullName) {
         User currentUser = SecurityUtils.getCurrentUser();
         if (!Objects.nonNull(newFullName) || Objects.equals(newFullName.length(), 0)) {
-            throw new GenericException(Errors.CANNOT_UPDATE_FO_FULL_NAME);
+            throw new GenericException(Errors.CANNOT_CHANGE);
         }
 
         currentUser.setFullName(newFullName);

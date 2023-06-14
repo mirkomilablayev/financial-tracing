@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface FOTypeRepository extends JpaRepository<TransactionType, Long> {
+public interface TransactionTypeRepository extends JpaRepository<TransactionType, Long> {
     Optional<TransactionType> findByIdAndIsDeletedAndIsPersonal(Long id, Boolean isDeleted, Boolean isPersonal);
 
     List<TransactionType> findAllByUserIdAndIsDeletedAndIsPersonal(Long userId, Boolean isDeleted, Boolean isPersonal);

@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class FinancialOperationResponse {
+public class TransactionResponse {
     private List<Transaction> income;
     private List<Transaction> outcome;
 }

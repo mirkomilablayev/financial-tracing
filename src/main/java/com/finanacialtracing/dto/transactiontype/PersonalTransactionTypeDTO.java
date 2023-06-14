@@ -1,4 +1,4 @@
-package com.finanacialtracing.dto.foType;
+package com.finanacialtracing.dto.transactiontype;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PersonalFOCreateTypeDTO {
+public class PersonalTransactionTypeDTO {
     @NonNull
     private String name;
 }

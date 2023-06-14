@@ -1,4 +1,4 @@
-package com.finanacialtracing.dto.foType;
+package com.finanacialtracing.dto.transactiontype;
 
 
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrganizationFOTypeUpdateDto {
-    private Long foTypeId;
+public class OrganizationTransactionTypeUpdateDto {
+    private Long transactionTypeId;
     private String newName;
 }

@@ -68,7 +68,7 @@ public class AuthorizationController {
         user.setUsername(registerDto.getUsername());
         user.setFullName(registerDto.getFullName());
         user.setRoles(Set.of(roleRepository.findByName(AuthorizationConstants.USER_ROLE)
-                .orElseThrow(() -> new GenericException(Errors.USER_ROLE_NOT_FOUND))));
+                .orElseThrow(() -> new GenericException(Errors.NOT_FOUND))));
         User save = userRepository.save(user);
 
         return new CommonResult(save.getUsername() + " Successfully Registered");

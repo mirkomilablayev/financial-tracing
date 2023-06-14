@@ -1,4 +1,4 @@
-package com.finanacialtracing.dto.transaction;
+package com.finanacialtracing.dto.transaction.personal;
 
 import lombok.*;
 
@@ -6,11 +6,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class FinancialOperationUpdateDto {
+public class PersonalTranCreateDto {
     @NonNull
-    private Long id;
     private Double amount;
     private String description;
+    @NonNull
     private Boolean isIncome;
-    private Long foTypeId;
+    @NonNull
+    private Long transactionTypeId;
 }

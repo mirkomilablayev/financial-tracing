@@ -14,5 +14,5 @@ public class TranCreateDto {
     @NonNull
     private Boolean isIncome;
     @NonNull
-    private Long foTypeId;
+    private Long transactionTypeId;
 }

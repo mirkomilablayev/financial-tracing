@@ -1,4 +1,4 @@
-package com.finanacialtracing.dto.transaction.organization;
+package com.finanacialtracing.dto.transaction.personal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrganizationFinancialOperationCriteria {
-    private Long orgId;
+public class PersonalTranCriteria {
     private Boolean sortedByAmount = false;
     private Double minAmount;
     private Double maxAmount;
@@ -19,6 +18,6 @@ public class OrganizationFinancialOperationCriteria {
     private LocalDateTime fromDate;
     private LocalDateTime toDate;
 
-    private Boolean sortedByFoType = false;
-    private Long foTypeId;
+    private Boolean sortedByTransactionType = false;
+    private Long transactionTypeId;
 }

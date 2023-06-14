@@ -32,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
         User currentUser = SecurityUtils.getCurrentUser();
         User user = userRepository.findByUsernameAndIsDeleted(addAdminDto.getUsername(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
         if (Objects.equals(user.getUsername(), currentUser.getUsername())) {
-            throw new GenericException(Errors.CANNOT_ADD_USER_AS_ADMIN);
+            throw new GenericException(Errors.CANNOT_ADD);
         }
         for (UserRole role : user.getRoles()) {
             if (Objects.equals(role.getName(), AuthorizationConstants.ADMIN_ROLE)) {
@@ -50,7 +50,7 @@ public class AdminServiceImpl implements AdminService {
         User currentUser = SecurityUtils.getCurrentUser();
         User user = userRepository.findByIdAndIsDeleted(adminId, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
         if (Objects.equals(user.getId(), currentUser.getId())) {
-            throw new GenericException(Errors.CANNOT_DELETE_ADMIN);
+            throw new GenericException(Errors.CANNOT_DELETE);
         }
         user.getRoles().removeIf(userRole -> Objects.equals(userRole.getName(), AuthorizationConstants.ADMIN_ROLE) && Objects.equals(userRole.getName(), AuthorizationConstants.SUPER_ADMIN));
         User savedUser = userRepository.save(user);
