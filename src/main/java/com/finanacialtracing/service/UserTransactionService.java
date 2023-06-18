@@ -49,7 +49,7 @@ public class UserTransactionService {
 
     public CommonResult updateTransactionType(PersonalTransactionTypeUpdateDTO personalTransactionTypeUpdateDTO) {
         User currentUser = SecurityUtils.getCurrentUser();
-        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(personalTransactionTypeUpdateDTO.getTransactionTypeId(), Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(personalTransactionTypeUpdateDTO.getTransactionTypeId(), Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(transactionType.getUserId(), currentUser.getId())) {
             log.error("Transaction type is belong to you");
             throw new GenericException(Errors.CANNOT_UPDATE);
@@ -63,7 +63,7 @@ public class UserTransactionService {
 
     public CommonResult deleteTransactionType(Long transactionTypeId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(transactionTypeId, Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(transactionTypeId, Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(transactionType.getUserId(), currentUser.getId())) {
             log.error("Transaction type is not belong to you");
             throw new GenericException(Errors.CANNOT_DELETE);
@@ -94,7 +94,7 @@ public class UserTransactionService {
 
     public CommonResult createTransaction(PersonalTranCreateDto personalTranCreateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(personalTranCreateDto.getTransactionTypeId(), Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(personalTranCreateDto.getTransactionTypeId(), Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         Transaction transaction = new Transaction();
         transaction.setUserId(currentUser.getId());
         transaction.setIsPersonal(Boolean.TRUE);
@@ -110,7 +110,7 @@ public class UserTransactionService {
 
 
     public CommonResult updateTransaction(TransactionUpdateDto transactionUpdateDto) {
-        Transaction transaction = transactionRepository.findByIdAndIsDeletedAndIsPersonal(transactionUpdateDto.getId(), Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Transaction transaction = transactionRepository.findByIdAndIsDeletedAndIsPersonal(transactionUpdateDto.getId(), Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
 
         if (!Objects.equals(transaction.getAmount(), transactionUpdateDto.getAmount())) {
             transaction.setAmount(transactionUpdateDto.getAmount());
@@ -137,7 +137,7 @@ public class UserTransactionService {
 
     public CommonResult deletedTransaction(Long foId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Transaction transaction = transactionRepository.findByIdAndIsDeletedAndIsPersonal(foId, Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Transaction transaction = transactionRepository.findByIdAndIsDeletedAndIsPersonal(foId, Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         Long userId = transaction.getUserId();
         if (!Objects.equals(currentUser.getId(), userId)) {
             throw new GenericException(Errors.CANNOT_DELETE);

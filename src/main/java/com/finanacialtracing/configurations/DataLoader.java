@@ -10,6 +10,7 @@ import com.finanacialtracing.util.constants.AuthorizationConstants;
 import com.finanacialtracing.entity.UserRole;
 import com.finanacialtracing.util.constants.WorkerPermissionConstants;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
@@ -50,8 +52,6 @@ public class DataLoader implements CommandLineRunner {
             workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_edit_transaction));
             workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_delete_transaction));
             workerPermissionRepository.save(new WorkerPermission(WorkerPermissionConstants.can_see_transaction));
-
-
         }
     }
 }

@@ -26,7 +26,7 @@ public class AdminService {
 
     public CommonResult addAdmin(AddAdminDto addAdminDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        User user = userRepository.findByUsernameAndIsDeleted(addAdminDto.getUsername(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        User user = userRepository.findByUsernameAndIsDeleted(addAdminDto.getUsername(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (Objects.equals(user.getUsername(), currentUser.getUsername())) {
             throw new GenericException(Errors.CANNOT_ADD);
         }
@@ -35,7 +35,7 @@ public class AdminService {
                 throw new GenericException(Errors.USER_ALREADY_ADMIN);
             }
         }
-        UserRole userRole = roleRepository.findByName(AuthorizationConstants.ADMIN_ROLE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        UserRole userRole = roleRepository.findByName(AuthorizationConstants.ADMIN_ROLE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         user.getRoles().add(userRole);
         User updatedUser = userRepository.save(user);
         return new CommonResult(updatedUser.getUsername() + " is now admin !");

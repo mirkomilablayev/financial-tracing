@@ -20,6 +20,7 @@ import com.finanacialtracing.dto.transactiontype.TransactionTypeDto;
 import com.finanacialtracing.dto.transactiontype.OrganizationTransactionTypeCreateDto;
 import com.finanacialtracing.dto.transactiontype.OrganizationTransactionTypeUpdateDto;
 import com.finanacialtracing.dto.organization.OrganizationDto;
+import com.finanacialtracing.exception.NotFoundException;
 import com.finanacialtracing.util.constants.WorkerPermissionConstants;
 import com.finanacialtracing.util.securityutils.SecurityUtils;
 import com.finanacialtracing.repository.*;
@@ -53,7 +54,7 @@ public class OrganizationTransactionService  {
 
     public CommonResult updateOrganization(OrganizationUpdateDto organizationUpdateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Organization organization = organizationRepository.findByIdAndIsDeleted(organizationUpdateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(organizationUpdateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_UPDATE);
         }
@@ -66,7 +67,7 @@ public class OrganizationTransactionService  {
 
     public CommonResult deleteOrganization(Long orgId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Organization organization = organizationRepository.findByIdAndIsDeleted(orgId, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(orgId, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_DELETE);
         }
@@ -96,7 +97,7 @@ public class OrganizationTransactionService  {
 
     public CommonResult addWorkerPosition(WorkerPositionCreateDto workerPositionCreateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Organization organization = organizationRepository.findByIdAndIsDeleted(workerPositionCreateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(workerPositionCreateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_CREATE);
         }
@@ -111,9 +112,9 @@ public class OrganizationTransactionService  {
     public CommonResult editWorkerPosition(WorkerPositionUpdateDto workerPositionUpdateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
         WorkerPosition workerPosition = workerPositionRepository.findByIdAndIsDeleted(workerPositionUpdateDto.getWorkerPositionId(), Boolean.FALSE)
-                .orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         Organization organization = organizationRepository.findByIdAndIsDeleted(workerPosition.getOrgId(), Boolean.FALSE)
-                .orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_CREATE);
         }
@@ -127,9 +128,9 @@ public class OrganizationTransactionService  {
     public CommonResult deleteWorkerPosition(Long workerPositionId) {
         User currentUser = SecurityUtils.getCurrentUser();
         WorkerPosition workerPosition = workerPositionRepository.findByIdAndIsDeleted(workerPositionId, Boolean.FALSE)
-                .orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         Organization organization = organizationRepository.findByIdAndIsDeleted(workerPosition.getOrgId(), Boolean.FALSE)
-                .orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_DELETE);
         }
@@ -141,7 +142,7 @@ public class OrganizationTransactionService  {
     public CommonResult getWorkerPositionList(Long orgId) {
         User currentUser = SecurityUtils.getCurrentUser();
         Organization organization = organizationRepository.findByIdAndIsDeleted(orgId, Boolean.FALSE)
-                .orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_GET);
         }
@@ -177,7 +178,7 @@ public class OrganizationTransactionService  {
 
         Set<WorkerPermission> workerPermissionSet = new HashSet<>();
         for (Long permissionId : workerCreateDto.getPermissionIds()) {
-            WorkerPermission workerPermission = workerPermissionRepository.findByIdAndIsDeleted(permissionId, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+            WorkerPermission workerPermission = workerPermissionRepository.findByIdAndIsDeleted(permissionId, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
             workerPermissionSet.add(workerPermission);
         }
 
@@ -188,8 +189,8 @@ public class OrganizationTransactionService  {
 
     public CommonResult deleteWorker(Long workerId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Worker worker = workerRepository.findByIdAndIsDeleted(workerId, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(worker.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Worker worker = workerRepository.findByIdAndIsDeleted(workerId, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(worker.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_DELETE);
         }
@@ -200,20 +201,20 @@ public class OrganizationTransactionService  {
 
     public CommonResult editWorkerPositionAndPermission(UpdateWorkerDto updateWorkerDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Worker worker = workerRepository.findByIdAndIsDeleted(updateWorkerDto.getWorkerId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(worker.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Worker worker = workerRepository.findByIdAndIsDeleted(updateWorkerDto.getWorkerId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(worker.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_UPDATE);
         }
 
         if (Objects.nonNull(updateWorkerDto.getWorkerId()) && !Objects.equals(worker.getPositionId(), updateWorkerDto.getNewPositionId())) {
-            WorkerPosition workerPosition = workerPositionRepository.findByIdAndIsDeleted(updateWorkerDto.getWorkerId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+            WorkerPosition workerPosition = workerPositionRepository.findByIdAndIsDeleted(updateWorkerDto.getWorkerId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
             worker.setPositionId(workerPosition.getId());
         }
         if (!Objects.equals(updateWorkerDto.getNewPermissions().size(), 0)) {
             Set<WorkerPermission> workerPermissionSet = new HashSet<>();
             for (Long permissionId : updateWorkerDto.getNewPermissions()) {
-                WorkerPermission workerPermission = workerPermissionRepository.findByIdAndIsDeleted(permissionId, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+                WorkerPermission workerPermission = workerPermissionRepository.findByIdAndIsDeleted(permissionId, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
                 workerPermissionSet.add(workerPermission);
             }
             worker.setPermissions(workerPermissionSet);
@@ -224,7 +225,7 @@ public class OrganizationTransactionService  {
 
     public CommonResult getWorkers(Long orgId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Organization organization = organizationRepository.findByIdAndIsDeleted(orgId, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(orgId, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId()) ||
                 !workerRepository.existsByUserIdAndOrgIdAndIsDeleted(currentUser.getId(), orgId, Boolean.FALSE)) {
             throw new GenericException(Errors.CANNOT_GET);
@@ -232,7 +233,7 @@ public class OrganizationTransactionService  {
         List<WorkerDto> workerDtoList = workerRepository.findAllByOrgIdAndIsDeleted(orgId, Boolean.FALSE)
                 .stream()
                 .map(worker -> {
-                    WorkerPosition workerPosition = workerPositionRepository.findByIdAndIsDeleted(worker.getPositionId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+                    WorkerPosition workerPosition = workerPositionRepository.findByIdAndIsDeleted(worker.getPositionId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
                     return new WorkerDto(
                             worker.getId(),
                             currentUser.getId(),
@@ -248,7 +249,7 @@ public class OrganizationTransactionService  {
 
     public CommonResult createOrganizationTransactionType(OrganizationTransactionTypeCreateDto organizationTransactionTypeCreateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Organization organization = organizationRepository.findByIdAndIsDeleted(organizationTransactionTypeCreateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(organizationTransactionTypeCreateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_CREATE);
         }
@@ -264,8 +265,8 @@ public class OrganizationTransactionService  {
 
     public CommonResult updateOrganizationTransactionType(OrganizationTransactionTypeUpdateDto organizationTransactionTypeUpdateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(organizationTransactionTypeUpdateDto.getTransactionTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(transactionType.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(organizationTransactionTypeUpdateDto.getTransactionTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(transactionType.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_UPDATE);
         }
@@ -278,8 +279,8 @@ public class OrganizationTransactionService  {
 
     public CommonResult deleteOrganizationTransactionType(Long transactionTypeId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(transactionTypeId, Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(transactionType.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(transactionTypeId, Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(transactionType.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_DELETE);
         }
@@ -294,7 +295,7 @@ public class OrganizationTransactionService  {
 
     public CommonResult getOrganizationTransactionType(Long orgId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Organization organization = organizationRepository.findByIdAndIsDeleted(orgId, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(orgId, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         if (!Objects.equals(organization.getUserId(), currentUser.getId())) {
             throw new GenericException(Errors.CANNOT_GET);
         }
@@ -308,8 +309,8 @@ public class OrganizationTransactionService  {
 
     public CommonResult createOrganizationTransaction(TranCreateDto tranCreateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Organization organization = organizationRepository.findByIdAndIsDeleted(tranCreateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(tranCreateDto.getTransactionTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(tranCreateDto.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
+        TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(tranCreateDto.getTransactionTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
 
         checkWorkerPermission(currentUser, organization, WorkerPermissionConstants.can_add_transaction);
 
@@ -327,13 +328,13 @@ public class OrganizationTransactionService  {
     }
 
     private Worker getWorker(Long currentUserId, Long orgId) {
-        return workerRepository.findByUserIdAndOrgIdAndIsDeleted(currentUserId, orgId, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.CANNOT_CREATE));
+        return workerRepository.findByUserIdAndOrgIdAndIsDeleted(currentUserId, orgId, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.CANNOT_CREATE));
     }
 
     public CommonResult updateOrganizationTransaction(TransactionUpdateDto transactionUpdateDto) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Transaction transaction = transactionRepository.findByIdAndIsDeletedAndIsPersonal(transactionUpdateDto.getId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(transaction.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Transaction transaction = transactionRepository.findByIdAndIsDeletedAndIsPersonal(transactionUpdateDto.getId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(transaction.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
 
         checkWorkerPermission(currentUser, organization, WorkerPermissionConstants.can_edit_transaction);
 
@@ -345,7 +346,7 @@ public class OrganizationTransactionService  {
             transaction.setDescription(transactionUpdateDto.getDescription());
         }
         if (Objects.equals(transaction.getTypeId(), transactionUpdateDto.getTransactionTypeId())) {
-            TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(transactionUpdateDto.getTransactionTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+            TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(transactionUpdateDto.getTransactionTypeId(), Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
             if (!Objects.equals(transaction.getOrgId(), transactionType.getOrgId())) {
                 throw new GenericException(Errors.CANNOT_UPDATE);
             }
@@ -363,8 +364,8 @@ public class OrganizationTransactionService  {
 
     public CommonResult deleteOrganizationTransaction(Long TransactionId) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Transaction transaction = transactionRepository.findByIdAndIsDeletedAndIsPersonal(TransactionId, Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
-        Organization organization = organizationRepository.findByIdAndIsDeleted(transaction.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Transaction transaction = transactionRepository.findByIdAndIsDeletedAndIsPersonal(TransactionId, Boolean.FALSE, Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(transaction.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         checkWorkerPermission(currentUser, organization, WorkerPermissionConstants.can_delete_transaction);
         transaction.setIsDeleted(Boolean.TRUE);
         Transaction deletedTransaction = transactionRepository.save(transaction);
@@ -373,7 +374,7 @@ public class OrganizationTransactionService  {
 
     public CommonResult getOrganizationTransactionList(int size, int page, OrganizationTranCriteria organizationTranCriteria) {
         User currentUser = SecurityUtils.getCurrentUser();
-        Organization organization = organizationRepository.findByIdAndIsDeleted(organizationTranCriteria.getOrgId(), Boolean.FALSE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
+        Organization organization = organizationRepository.findByIdAndIsDeleted(organizationTranCriteria.getOrgId(), Boolean.FALSE).orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND));
         checkWorkerPermission(currentUser, organization, WorkerPermissionConstants.can_delete_transaction);
 
         TransactionResponse transactionResponse = new TransactionResponse();
