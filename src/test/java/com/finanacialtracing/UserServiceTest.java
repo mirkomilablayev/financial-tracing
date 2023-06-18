@@ -2,19 +2,15 @@ package com.finanacialtracing;
 
 
 import com.finanacialtracing.dto.CommonResult;
-import com.finanacialtracing.dto.admin.AddAdminDto;
 import com.finanacialtracing.dto.admin.ChangePasswordDto;
 import com.finanacialtracing.entity.User;
 import com.finanacialtracing.entity.UserRole;
 import com.finanacialtracing.exception.Errors;
 import com.finanacialtracing.exception.GenericException;
-import com.finanacialtracing.repository.RoleRepository;
 import com.finanacialtracing.repository.UserRepository;
-import com.finanacialtracing.service.AdminService;
-import com.finanacialtracing.service.AuthorizationService;
+import com.finanacialtracing.service.UserService;
 import com.finanacialtracing.util.constants.AuthorizationConstants;
 import com.finanacialtracing.util.securityutils.SecurityUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,15 +20,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
-public class AuthorizationServiceTest {
+public class UserServiceTest {
 
     @InjectMocks
-    private AuthorizationService authorizationService;
+    private UserService userService;
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -77,7 +72,7 @@ public class AuthorizationServiceTest {
                     .thenReturn(mockUser);
 
 
-            CommonResult commonResult = authorizationService.changeUsername("username");
+            CommonResult commonResult = userService.changeUsername("username");
             Assertions.assertEquals(Errors.SUCCESS.getCode(), commonResult.getCode());
         }
     }
@@ -92,7 +87,7 @@ public class AuthorizationServiceTest {
                     .thenReturn(true);
 
             GenericException exception = Assertions.assertThrows(GenericException.class, () ->
-                    authorizationService.changeUsername("username")
+                    userService.changeUsername("username")
             );
 
             Assertions.assertEquals(Errors.USERNAME_ALREADY_TAKEN, exception.getError());
@@ -113,7 +108,7 @@ public class AuthorizationServiceTest {
             Mockito.when(userRepository.save(ArgumentMatchers.any(User.class)))
                     .thenReturn(mockUser);
 
-            CommonResult commonResult = authorizationService.changePassword(new ChangePasswordDto(mockUser.getUsername(), mockUser.getPassword(), "newPassword"));
+            CommonResult commonResult = userService.changePassword(new ChangePasswordDto(mockUser.getUsername(), mockUser.getPassword(), "newPassword"));
             Assertions.assertEquals(Errors.SUCCESS.getMessage(), commonResult.getMessage());
         }
     }
@@ -129,7 +124,7 @@ public class AuthorizationServiceTest {
             Mockito.when(passwordEncoder.matches(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                     .thenReturn(false);
 
-            GenericException genericException = Assertions.assertThrows(GenericException.class, () -> authorizationService.changePassword(new ChangePasswordDto(mockUser.getUsername(), mockUser.getPassword(), "newPassword")));
+            GenericException genericException = Assertions.assertThrows(GenericException.class, () -> userService.changePassword(new ChangePasswordDto(mockUser.getUsername(), mockUser.getPassword(), "newPassword")));
             Assertions.assertEquals(Errors.CANNOT_CHANGE, genericException.getError());
         }
     }
@@ -142,7 +137,7 @@ public class AuthorizationServiceTest {
 
             Mockito.when(userRepository.save(ArgumentMatchers.any(User.class)))
                     .thenReturn(mockUser);
-            Assertions.assertEquals(Errors.SUCCESS.getMessage(), authorizationService.deleteUser().getMessage());
+            Assertions.assertEquals(Errors.SUCCESS.getMessage(), userService.deleteUser().getMessage());
         }
     }
 
@@ -151,7 +146,7 @@ public class AuthorizationServiceTest {
         try (MockedStatic<SecurityUtils> utilities = BDDMockito.mockStatic(SecurityUtils.class)) {
             User mockUser = getMockUser();
             utilities.when(SecurityUtils::getCurrentUser).thenReturn(mockUser);
-            GenericException genericException = Assertions.assertThrows(GenericException.class, () -> authorizationService.deleteUser());
+            GenericException genericException = Assertions.assertThrows(GenericException.class, () -> userService.deleteUser());
             Assertions.assertEquals(Errors.CANNOT_DELETE.getMessage(), genericException.getError().getMessage());
         }
     }
@@ -164,7 +159,7 @@ public class AuthorizationServiceTest {
 
             Mockito.when(userRepository.save(ArgumentMatchers.any(User.class)))
                     .thenReturn(mockUser);
-            Assertions.assertEquals(Errors.SUCCESS.getMessage(), authorizationService.editFullName("new full name").getMessage());
+            Assertions.assertEquals(Errors.SUCCESS.getMessage(), userService.editFullName("new full name").getMessage());
         }
     }
 
@@ -175,7 +170,7 @@ public class AuthorizationServiceTest {
             utilities.when(SecurityUtils::getCurrentUser).thenReturn(mockUser);
 
 
-            GenericException genericException = Assertions.assertThrows(GenericException.class, () -> authorizationService.editFullName(""));
+            GenericException genericException = Assertions.assertThrows(GenericException.class, () -> userService.editFullName(""));
             Assertions.assertEquals(Errors.CANNOT_CHANGE.getMessage(), genericException.getError().getMessage());
         }
     }

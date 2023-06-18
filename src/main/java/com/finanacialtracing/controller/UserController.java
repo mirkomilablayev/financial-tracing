@@ -8,7 +8,8 @@ import com.finanacialtracing.dto.auth.RegisterDTO;
 import com.finanacialtracing.entity.User;
 import com.finanacialtracing.exception.Errors;
 import com.finanacialtracing.exception.GenericException;
-import com.finanacialtracing.service.AuthorizationService;
+import com.finanacialtracing.exception.NotFoundException;
+import com.finanacialtracing.service.UserService;
 import com.finanacialtracing.util.securityutils.JwtUtils;
 import com.finanacialtracing.repository.RoleRepository;
 import com.finanacialtracing.repository.UserRepository;
@@ -28,7 +29,7 @@ import java.util.Set;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Slf4j
-public class AuthorizationController {
+public class UserController {
     private final AuthenticationManager authenticationManager;
 
     private final UserRepository userRepository;
@@ -41,9 +42,13 @@ public class AuthorizationController {
 
     public static final String USERNAME_VALIDATION_PATTERN = "^[a-zA-Z][a-zA-Z0-9_]{4,}$";
 
-    private final AuthorizationService authorizationService;
+    private final UserService userService;
 
-
+    /**
+     *  You can login here
+     * @param loginRequest there are two fields username and password in this class
+     * @return CommonResult
+     */
     @PostMapping("/login")
     public CommonResult login(@RequestBody LoginRequest loginRequest) {
         Authentication authenticate = authenticationManager.authenticate(
@@ -54,6 +59,12 @@ public class AuthorizationController {
         return new CommonResult(new JwtResponse(jwt));
     }
 
+    /**
+     * You can register here
+     * @param registerDto
+     * @return
+     * @throws GenericException
+     */
     @PostMapping("/register")
     public CommonResult register(@RequestBody RegisterDTO registerDto) throws GenericException {
         log.info("Start register method");
@@ -68,36 +79,54 @@ public class AuthorizationController {
         user.setUsername(registerDto.getUsername());
         user.setFullName(registerDto.getFullName());
         user.setRoles(Set.of(roleRepository.findByName(AuthorizationConstants.USER_ROLE)
-                .orElseThrow(() -> new GenericException(Errors.NOT_FOUND))));
+                .orElseThrow(() -> new NotFoundException(Errors.NOT_FOUND))));
         User save = userRepository.save(user);
 
         return new CommonResult(save.getUsername() + " Successfully Registered");
     }
 
 
-
+    /**
+     * You can change your username here
+     * @param newUsername
+     * @return
+     */
     @PutMapping("/change-username")
     public CommonResult changeUsername(@RequestParam String newUsername){
         log.info("Rest request to changeUsername()");
-        return authorizationService.changeUsername(newUsername);
+        return userService.changeUsername(newUsername);
     }
 
+    /**
+     * you can change your password here
+     * @param changePasswordDto
+     * @return
+     */
     @PutMapping("/change-password")
     public CommonResult changePassword(@RequestBody ChangePasswordDto changePasswordDto){
         log.info("Rest request to changePassword()");
-        return authorizationService.changePassword(changePasswordDto);
+        return userService.changePassword(changePasswordDto);
     }
 
+    /**
+     * you can delete your account here
+     * @return
+     */
     @DeleteMapping("/delete-account")
     public CommonResult deleteUser(){
         log.info("Rest request to deleteUser()");
-        return authorizationService.deleteUser();
+        return userService.deleteUser();
     }
 
+    /**
+     * you can edit your full name here
+     * @param newFullName
+     * @return
+     */
     @PutMapping("/change-full-name")
     public CommonResult editFullName(@RequestParam String newFullName){
         log.info("Rest request to editFullName()");
-        return authorizationService.editFullName(newFullName);
+        return userService.editFullName(newFullName);
     }
 
 }

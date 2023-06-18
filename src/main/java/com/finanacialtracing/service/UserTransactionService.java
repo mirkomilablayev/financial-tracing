@@ -18,6 +18,7 @@ import com.finanacialtracing.repository.TransactionTypeRepository;
 import com.finanacialtracing.repository.TransactionRepository;
 import com.finanacialtracing.util.securityutils.SecurityUtils;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ import java.util.Objects;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserTransactionService {
 
     private final TransactionTypeRepository transactionTypeRepository;
@@ -40,6 +42,7 @@ public class UserTransactionService {
         transactionType.setIsPersonal(Boolean.TRUE);
         transactionType.setUserId(currentUser.getId());
         TransactionType savedTransactionType = transactionTypeRepository.save(transactionType);
+        log.info("Successfully created new transaction type");
         return new CommonResult(savedTransactionType);
     }
 
@@ -48,10 +51,12 @@ public class UserTransactionService {
         User currentUser = SecurityUtils.getCurrentUser();
         TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(personalTransactionTypeUpdateDTO.getTransactionTypeId(), Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
         if (!Objects.equals(transactionType.getUserId(), currentUser.getId())) {
+            log.error("Transaction type is belong to you");
             throw new GenericException(Errors.CANNOT_UPDATE);
         }
         transactionType.setName(personalTransactionTypeUpdateDTO.getNewTransactionTypeName());
         TransactionType updatedTransactionType = transactionTypeRepository.save(transactionType);
+        log.info("Transaction type successfully updated");
         return new CommonResult(" Financial Operation Type is updated to " + updatedTransactionType.getName());
     }
 
@@ -60,13 +65,16 @@ public class UserTransactionService {
         User currentUser = SecurityUtils.getCurrentUser();
         TransactionType transactionType = transactionTypeRepository.findByIdAndIsDeletedAndIsPersonal(transactionTypeId, Boolean.FALSE, Boolean.TRUE).orElseThrow(() -> new GenericException(Errors.NOT_FOUND));
         if (!Objects.equals(transactionType.getUserId(), currentUser.getId())) {
+            log.error("Transaction type is not belong to you");
             throw new GenericException(Errors.CANNOT_DELETE);
         }
         if (!isUsedBefore(transactionType, currentUser)) {
+            log.error("Transaction type is used before you cannot delete it");
             throw new GenericException(Errors.CANNOT_DELETE);
         }
         transactionType.setIsDeleted(Boolean.TRUE);
         TransactionType deletedTransactionType = transactionTypeRepository.save(transactionType);
+        log.info(" transaction type is successfully deleted ");
         return new CommonResult(deletedTransactionType.getName() + " is Successfully deleted");
     }
 
@@ -79,6 +87,7 @@ public class UserTransactionService {
     public CommonResult getPersonalTransactionTypes() {
         User currentUser = SecurityUtils.getCurrentUser();
         List<TransactionType> transactionTypeList = transactionTypeRepository.findAllByUserIdAndIsDeletedAndIsPersonal(currentUser.getId(), Boolean.FALSE, Boolean.TRUE);
+        log.info("Successfully got transaction types");
         return new CommonResult(transactionTypeList);
     }
 
@@ -95,6 +104,7 @@ public class UserTransactionService {
         transaction.setIsIncome(personalTranCreateDto.getIsIncome());
         transaction.setCreatedAt(LocalDateTime.now());
         Transaction savedTransaction = transactionRepository.save(transaction);
+        log.info("Transaction is successfully created");
         return new CommonResult(savedTransaction, Errors.SUCCESS.getCode(), Errors.SUCCESS.getMessage());
     }
 
@@ -120,6 +130,7 @@ public class UserTransactionService {
         }
 
         Transaction updatedTransaction = transactionRepository.save(transaction);
+        log.info("transaction is successfully created");
         return new CommonResult(updatedTransaction.getId() + " is Successfully Updated", Errors.SUCCESS.getCode(), Errors.SUCCESS.getMessage());
     }
 
@@ -133,6 +144,7 @@ public class UserTransactionService {
         }
         transaction.setIsDeleted(Boolean.TRUE);
         Transaction deletedTrannsaction = transactionRepository.save(transaction);
+        log.info("Transaction is successfully deleted");
         return new CommonResult(deletedTrannsaction.getId() + " is Successfully deleted");
     }
 
@@ -170,6 +182,7 @@ public class UserTransactionService {
                 transactionResponse.getOutcome().add(transaction);
             }
         }
+        log.info("Successfully got transaction list");
         return new CommonResult(transactionResponse, Errors.SUCCESS.getCode(), Errors.SUCCESS.getMessage());
     }
 

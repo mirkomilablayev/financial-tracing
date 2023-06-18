@@ -20,52 +20,80 @@ public class UserTransactionController {
     private final UserTransactionService tranService;
 
 
-    @PostMapping("/create-p-tran-type")
+    /**
+     * create personal transaction type
+     */
+    @PostMapping("/create-personal-tran-type")
     public CommonResult createTransactionType(@RequestBody PersonalTransactionTypeDTO personalTransactionTypeDTO) {
         log.info("rest request to createTransactionType() with param={}", personalTransactionTypeDTO);
         return tranService.createTransactionType(personalTransactionTypeDTO);
     }
 
-    @PostMapping("/update-p-tran-type")
+    /**
+     * update personal transaction type
+     */
+    @PostMapping("/update-personal-tran-type")
     public CommonResult updateTransactionType(@RequestBody PersonalTransactionTypeUpdateDTO personalTransactionTypeUpdateDTO) {
         log.info("rest request to updateTransactionType() with param={}", personalTransactionTypeUpdateDTO);
         return tranService.updateTransactionType(personalTransactionTypeUpdateDTO);
     }
 
-    @DeleteMapping("/delete-p-tran-type/{transactionTypeId}")
+    /**
+     * delete personal transaction type by id
+     */
+
+    @DeleteMapping("/delete-personal-tran-type/{transactionTypeId}")
     public CommonResult deletePTransactionType(@PathVariable Long transactionTypeId) {
         log.info("rest request to deletePTransactionType() with param={}", transactionTypeId);
         return tranService.deleteTransactionType(transactionTypeId);
     }
 
-    @GetMapping("/get-p-tran-types")
+    /**
+     * get personal transaction type list
+     */
+    @GetMapping("/get-personal-tran-types")
     public CommonResult getPersonalTransactionTypes() {
         log.info("rest request to getPersonalTransactionTypes()");
         return tranService.getPersonalTransactionTypes();
     }
 
-    @PostMapping("/create-p-tran")
+
+    /**
+     * create personal transaction
+     */
+    @PostMapping("/create-personal-tran")
     public CommonResult createPersonalTransaction(@RequestBody PersonalTranCreateDto personalTranCreateDto) {
         log.info("Rest request to createPersonalTransaction() with param={}", personalTranCreateDto);
         return tranService.createTransaction(personalTranCreateDto);
     }
 
-    @PutMapping("/update-p-tran")
+    /**
+     * update personal transaction
+     */
+    @PutMapping("/update-personal-tran")
     public CommonResult updatePersonalTransaction(@RequestBody TransactionUpdateDto transactionUpdateDto) {
         log.info("Rest request to updatePersonalTransaction() with param={}", transactionUpdateDto);
         return tranService.updateTransaction(transactionUpdateDto);
     }
 
-    @DeleteMapping("/delete-p-tran/{tranId}")
+    /**
+     * delete personal transaction by id
+     */
+    @DeleteMapping("/delete-personal-tran/{tranId}")
     public CommonResult deletePersonalTransaction(@PathVariable Long tranId) {
         log.info("Rest request deletePersonalTransaction() with param={}", tranId);
         return tranService.deletedTransaction(tranId);
     }
 
-    @GetMapping("/get-p-tran-list")
+    /**
+     * get personal transaction list
+     * you can filter response here
+     */
+    @GetMapping("/get-personal-tran-list")
     CommonResult getTransactionList(@RequestParam(defaultValue = "10") int size,
                            @RequestParam(defaultValue = "1") int page,
                            @RequestBody PersonalTranCriteria personalTranCriteria) {
+        log.info("Rest request to getTransactionList()");
         return tranService.getTransactionList(size, page, personalTranCriteria);
     }
 
