@@ -5,11 +5,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finanacialtracing.dto.CommonResult;
 import com.finanacialtracing.dto.organization.OrganizationCreateDto;
+import com.finanacialtracing.dto.organization.OrganizationDto;
 import com.finanacialtracing.dto.organization.OrganizationUpdateDto;
 import com.finanacialtracing.dto.transaction.TransactionUpdateDto;
 import com.finanacialtracing.dto.transaction.personal.PersonalTranCreateDto;
 import com.finanacialtracing.dto.transactiontype.PersonalTransactionTypeDTO;
 import com.finanacialtracing.dto.transactiontype.PersonalTransactionTypeUpdateDTO;
+import com.finanacialtracing.dto.workerposition.WorkerPositionCreateDto;
 import com.finanacialtracing.entity.*;
 import com.finanacialtracing.exception.Errors;
 import com.finanacialtracing.exception.GenericException;
@@ -213,7 +215,7 @@ public class OrganizationTransactionServiceTest {
             Mockito.when(organizationRepository.findByIdAndIsDeleted(ArgumentMatchers.anyLong(), ArgumentMatchers.anyBoolean()))
                     .thenReturn(Optional.of(getOrganization(mockUser)));
 
-            Assertions.assertEquals(Errors.SUCCESS.getCode(),  organizationTransactionService.getOrganizationIAmWorking().getCode());
+            Assertions.assertEquals(Errors.SUCCESS.getCode(), organizationTransactionService.getOrganizationIAmWorking().getCode());
         }
     }
 
@@ -227,11 +229,24 @@ public class OrganizationTransactionServiceTest {
                     .thenReturn(new ArrayList<>(List.of(getOrganization(mockUser))));
 
             CommonResult myOrganizations = organizationTransactionService.getMyOrganizations();
-            List<TransactionType> result = new ObjectMapper().convertValue(myOrganizations.getData(), new TypeReference<List<TransactionType>>() {
+            List<OrganizationDto> result = new ObjectMapper().convertValue(myOrganizations.getData(), new TypeReference<List<OrganizationDto>>() {
             });
-
-
             Assertions.assertEquals(GET_MY_ORGANIZATIONS_LIST_SIZE, result.size());
+        }
+    }
+
+
+    @Test
+    public void addWorkerPositionShouldReturnSUCCESS() {
+        try (MockedStatic<SecurityUtils> utilities = BDDMockito.mockStatic(SecurityUtils.class)) {
+            User mockUser = getTestUser();
+            utilities.when(SecurityUtils::getCurrentUser).thenReturn(mockUser);
+            Organization organization = getOrganization(mockUser);
+            Mockito.when(organizationRepository.findByIdAndIsDeleted(ArgumentMatchers.anyLong(), ArgumentMatchers.anyBoolean()))
+                    .thenReturn(Optional.of(organization));
+            Mockito.when(workerPositionRepository.save(ArgumentMatchers.any(WorkerPosition.class)))
+                            .thenReturn(getWorkerPosition(mockUser));
+            Assertions.assertEquals(Errors.SUCCESS.getCode(), organizationTransactionService.addWorkerPosition(new WorkerPositionCreateDto(organization.getId(), "Position name")).getCode());
         }
     }
 
