@@ -1,4 +1,4 @@
-package com.finanacialtracing.service.impl;
+package com.finanacialtracing.service;
 
 import com.finanacialtracing.entity.User;
 import com.finanacialtracing.repository.UserRepository;

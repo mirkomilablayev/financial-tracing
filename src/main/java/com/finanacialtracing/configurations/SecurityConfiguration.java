@@ -3,7 +3,7 @@ package com.finanacialtracing.configurations;
 
 import com.finanacialtracing.util.securityutils.AuthEntryPointJwt;
 import com.finanacialtracing.util.securityutils.JwtFilter;
-import com.finanacialtracing.service.impl.UserDetailsServiceImpl;
+import com.finanacialtracing.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
